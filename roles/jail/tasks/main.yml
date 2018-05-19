@@ -1,0 +1,5 @@
+---
+- name: Clear /tmp on startup
+  lineinfile:
+    path: /etc/rc.conf
+    line: 'clear_tmp_enable=YES'

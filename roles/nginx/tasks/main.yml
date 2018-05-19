@@ -1,0 +1,33 @@
+---
+- name: Directory for certificates
+  file:
+    path: /data/nginx/ssl
+    state: directory
+    owner: www
+    group: www
+
+- name: Install SSL certificate
+  copy:
+    src: secrets/nginx.crt
+    dest: /data/nginx/ssl/nginx.crt
+    owner: www
+    group: www
+
+- name: Install server private key
+  copy:
+    src: secrets/nginx.key
+    dest: /data/nginx/ssl/nginx.key
+    mode: 0600
+    owner: www
+    group: www
+
+- name: Install nginx config file
+  copy:
+    src: files/nginx.conf
+    dest: /usr/local/etc/nginx/nginx.conf
+
+- name: Enable and run nginx
+  service:
+    name: nginx
+    enabled: yes
+    state: started

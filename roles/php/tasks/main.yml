@@ -1,0 +1,41 @@
+---
+- name: Data folders for nextcloud data and php-fpm
+  file:
+    path: /data/{{item}}
+    state: directory
+    owner: www
+    group: www
+    mode: 0770
+  with_items:
+    - nextcloud
+    - php-fpm
+
+- name: Install php.ini
+  copy:
+    src: files/php.ini
+    dest: /usr/local/etc/php.ini
+
+- name: Log file for php-fpm
+  copy:
+    content: ""
+    dest: /data/php-fpm/error.log
+    force: no
+    owner: www
+    group: www
+
+- name: Configure log file location for php-fpm
+  lineinfile:
+    path: /usr/local/etc/php-fpm.conf
+    regexp: 'error_log\s*='
+    line: 'error_log = /data/php-fpm/error.log'
+
+- name: Configuration file for php-fpm
+  copy:
+    src: files/php-fpm.d.www.conf
+    dest: /usr/local/etc/php-fpm.d/www.conf
+
+- name: Enable and run php-fpm
+  service:
+    name: php-fpm
+    enabled: yes
+    state: started

@@ -1,0 +1,23 @@
+---
+- name: Install required packages
+  pkgng: name={{item}} state=present
+  with_items:
+    - nextcloud-php72
+    - mysql56-server
+    - nginx
+    - redis
+    - php72-pecl-redis
+
+- name: Install optional packages for nextcloud
+  pkgng: name={{item}} state=present
+  with_items:
+    - nextcloud-calendar-php72
+    - nextcloud-contacts-php72
+    - nextcloud-mail-php72
+    - nextcloud-notes-php72
+    - nextcloud-passman-php72
+    - nextcloud-tasks-php72
+    - nextcloud-twofactor_totp-php72
+    - nextcloud-twofactor_u2f-php72
+  tags: optional
+

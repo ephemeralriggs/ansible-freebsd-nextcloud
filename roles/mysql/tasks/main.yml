@@ -1,0 +1,44 @@
+---
+- name: Install database configuration file
+  copy:
+    src: files/my.cnf
+    dest: /usr/local/etc/mysql/my.cnf
+
+- name: Create / set permissions for database work directories
+  file:
+    path: /data/{{item}}
+    state: directory
+    owner: mysql
+    group: mysql
+    mode: 0755
+  with_items:
+   - mysql
+   - mysql/tmpdir
+   - mysql/secure
+   - mysql/innodb
+   - mysql/innodb-logs
+   - ../var/run/mysql
+
+- name: Set database dbdir in mysql startup
+  lineinfile:
+    path: /etc/rc.conf
+    line: '{{item}}'
+  with_items:
+    - mysql_dbdir="/data/mysql"
+    - mysql_pidfile="/var/run/mysql/mysqld.pid"
+
+- name: Enable and run database service
+  service:
+    name: mysql-server
+    enabled: yes
+    state: started
+
+- name: Perform mysql_secure_install
+  script: files/mysql_secure.sh {{ mysql_rootpw }}
+  args:
+    creates: /var/db/mysql_secure/MYSQL_SECURE_DONE
+
+- name: Setup database table and admin user for Nextcloud
+  script: files/mysql_nextcloud_admin.sh {{ mysql_rootpw }} {{ mysql_ncuser }} {{ mysql_ncpass }}
+  args:
+    creates: /var/db/mysql_secure/MYSQL_NEXTCLOUD_ADMIN_DONE

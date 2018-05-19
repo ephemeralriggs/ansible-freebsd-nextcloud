@@ -1,0 +1,23 @@
+---
+- name: Caching data folder
+  file:
+    path: /data/redis
+    state: directory
+    owner: redis
+    group: redis
+
+- name: Configure caching service
+  copy:
+    src: files/redis.conf
+    dest: /usr/local/etc/redis.conf
+
+- name: Enable and run caching service
+  service:
+    name: redis
+    enabled: yes
+    state: started
+
+- name: Place memcache config snipped for php
+  copy:
+    src: files/memcache.redis.php
+    dest: /usr/local/share/nextcloud/memcache.redis.php
