@@ -30,6 +30,8 @@ A few things should be prepared in advance before the playbook can run:
    - `db_rootpw: <DatabaseRootPasswordHere>`
    - `db_ncuser: <NextcloudDBtablesAdminUserHere>`
    - `db_ncpass: <NextcloudDBtablesAdminPasswordHere>`
+ - Create a `secrets/server.yml` with the following YAML variables for insertion into `nginx.conf`:
+   - `server_name: <your.server.here.tld>`
  - Create a jail running FreeBSD 11.2-RELEASE-pX using your favourite method.
    - Ensure sshd is running in the jail and the jail is reachable.
    - Create an ansible user who is a member of the wheel group, e.g. via `pw useradd -n ansible -s /bin/sh -m -d /usr/home/ansible -G wheel`

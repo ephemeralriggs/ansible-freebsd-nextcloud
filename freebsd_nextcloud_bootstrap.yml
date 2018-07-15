@@ -9,6 +9,7 @@
     ansible_python_interpreter: "/usr/local/bin/python"
   vars_files:
     - secrets/dbcred.yml
+    - secrets/server.yml
   roles:
     - jail
     - pkg

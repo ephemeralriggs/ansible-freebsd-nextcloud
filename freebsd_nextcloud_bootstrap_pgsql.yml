@@ -10,6 +10,7 @@
   vars_files:
     - secrets/custom_pkg.yml
     - secrets/dbcred.yml
+    - secrets/server.yml
   roles:
     - jail
     - pkg-psql

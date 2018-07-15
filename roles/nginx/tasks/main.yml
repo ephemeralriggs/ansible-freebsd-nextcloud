@@ -22,8 +22,8 @@
     group: www
 
 - name: Install nginx config file
-  copy:
-    src: files/nginx.conf
+  template:
+    src: files/nginx.j2
     dest: /usr/local/etc/nginx/nginx.conf
 
 - name: Enable and run nginx
