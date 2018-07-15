@@ -8,11 +8,12 @@
   vars:
     ansible_python_interpreter: "/usr/local/bin/python"
   vars_files:
+    - secrets/custom_pkg.yml
     - secrets/dbcred.yml
   roles:
     - jail
-    - pkg
-    - mysql
+    - pkg-psql
+    - psql
     - nginx
     - redis
     - php

@@ -1,0 +1,57 @@
+---
+- name: Create / set permissions for database work directories
+  file:
+    path: /data/{{item}}
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: 0700
+  with_items:
+   - postgres
+
+- name: Set postgresql startup parameters in rc.conf
+  lineinfile:
+    path: /etc/rc.conf
+    line: '{{item}}'
+  with_items:
+    - postgresql_data="/data/postgres"
+    - postgresql_class="postgres"
+
+- name: Enable database service
+  service:
+    name: postgresql
+    enabled: yes
+
+- name: Initialise database
+  script: files/psql_initdb.sh
+  args:
+    creates: /var/db/postgres/PSQL_INITDB_DONE
+
+- name: Listen only via sockets
+  lineinfile:
+    path: /data/postgres/postgresql.conf
+    regexp: 'listen_addresses\s*='
+    line: listen_addresses = ''
+
+- name: Run database service
+  service:
+    name: postgresql
+    enabled: yes
+    state: started
+
+- name: Setup db accounts and Nextcloud database space
+  script: files/psql_nextcloud_admin.sh {{ db_rootpw }} {{ db_ncuser }} {{ db_ncpass }}
+  args:
+    creates: /var/db/postgres/PSQL_NEXTCLOUD_ADMIN_DONE
+
+- name: Force password authentication for sockets
+  lineinfile:
+    path: /data/postgres/pg_hba.conf
+    regexp: 'local\s+all\s+all\s+'
+    line: local   all             all                                     md5
+
+- name: Restart database service
+  service:
+    name: postgresql
+    enabled: yes
+    state: restarted

@@ -34,11 +34,11 @@
     state: started
 
 - name: Perform mysql_secure_install
-  script: files/mysql_secure.sh {{ mysql_rootpw }}
+  script: files/mysql_secure.sh {{ db_rootpw }}
   args:
     creates: /var/db/mysql_secure/MYSQL_SECURE_DONE
 
 - name: Setup database table and admin user for Nextcloud
-  script: files/mysql_nextcloud_admin.sh {{ mysql_rootpw }} {{ mysql_ncuser }} {{ mysql_ncpass }}
+  script: files/mysql_nextcloud_admin.sh {{ db_rootpw }} {{ db_ncuser }} {{ db_ncpass }}
   args:
     creates: /var/db/mysql_secure/MYSQL_NEXTCLOUD_ADMIN_DONE

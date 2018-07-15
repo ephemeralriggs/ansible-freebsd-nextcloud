@@ -3,3 +3,12 @@
   lineinfile:
     path: /etc/rc.conf
     line: 'clear_tmp_enable=YES'
+
+- name: Enforce permissions on /data
+  file:
+    path: /data
+    state: directory
+    owner: root
+    group: wheel
+    mode: 0755
+
